@@ -1,13 +1,9 @@
 :tocdepth: 1
 
-.. note::
-
-   **This technote is not yet published.**
-
 Introduction
 ============
 
-The Simulated Observatory Control System (SOCS) is designed to work with the LSST Scheduler. However, this does not mean that other Schedulers can't be developed and interfaced with SOCS in order to produce simulated surveys. This document details the required interfaces and specifications that will allow another Scheduler to be used with SOCS.
+The Simulated Observatory Control System (SOCS) is designed to work with the LSST Scheduler, and it was also designed with the intent that other Schedulers could be developed and interfaced with SOCS in order to produce simulated surveys. The LSST Observatory Control System (OCS) communicates with all components via the Software Abstraction Layer (SAL)/Distributed Data Service (DDS) protocol. SOCS also communicates this way to interface with the LSST Scheduler. More details about the SOCS/Scheduler interaction can be found in the SOCS SPIE paper: [Reuter2016]_. This technote details the required interfaces and specifications that will allow another Scheduler to be used with SOCS.
 
 Mandatory Requirements
 ======================
@@ -15,9 +11,9 @@ Mandatory Requirements
 SAL/DDS Communication
 ---------------------
 
-This is by far the most stringent requirement for any Scheduler. The LSST Observatory Control System (OCS) communicates with all components via the Software Abstraction Layer (SAL)/Distributed Data Service (DDS) protocol. SOCS also communicates this way to interface with the LSST Scheduler. There is an Interface Control Document (ICD) which details currently defined the SAL/DDS topics for Scheduler communication. The `Scheduler ICD`_ is kept in LSST's DocuShare repository. If you do not have access to DocuShare, you can contact the author for a copy. The specification of the topics is kept with the `SAL code`_ on the ``feature/scheduler_xml_devel`` branch. Setup and building of the topic library can be found in the `SOCS documentation`_. **NOTE**: The SAL/DDS system requires running on a Linux environment. Mac support is in the works.
+This is by far the most stringent requirement for any Scheduler. There is an Interface Control Document (ICD) which details currently defined the SAL/DDS topics for Scheduler communication. The `Scheduler ICD`_ is kept in LSST's DocuShare repository. If you do not have access to DocuShare, you can contact the author for a copy. The specification of the topics is kept with the `SAL code`_ on the ``feature/scheduler_xml_devel`` branch. Setup and building of the topic library can be found in the `SOCS documentation`_. **NOTE**: The SAL/DDS system requires running on a Linux environment. Mac support is in the works.
 
-From Scheduler Topics
+From-Scheduler Topics
 ~~~~~~~~~~~~~~~~~~~~~
 
 There are currently four topics that the LSST Scheduler sends to SOCS, all of which are required for SOCS to correctly function. It is not completely necessary to have all information within a topic filled. Each topic will now be discussed in detail.
@@ -25,7 +21,7 @@ There are currently four topics that the LSST Scheduler sends to SOCS, all of wh
 Fields
 ^^^^^^
 
-All information is currently mandatory due to the LSST Scheduler being responsible for the information. However, the new `Sims Survey Fields code`_ is destined end the need for a Scheduler to send this information as all code bases can benefit from the central resource. For mapping sky brightness and airmass, a field Id is required by SOCS. It does not currently offer HealPix support, however, one can work with the author to determine methodology for commensurate behavior.
+All information is currently mandatory due to the LSST Scheduler being responsible for the information. However, the new `Sims Survey Fields code`_ is destined to end the need for a Scheduler to send this information as all code bases can benefit from the central resource. For mapping sky brightness and airmass, a unique field identifier is required by SOCS. It does not currently offer HealPix support, however, one can work with the author to determine methodology for commensurate behavior.
 
 Next Target
 ^^^^^^^^^^^
@@ -42,7 +38,7 @@ Interested Proposal
 
 This topic is also required in the sense that it needs to be sent to SOCS after an observation is made, but an empty message may be used. An empty message means that the num_proposals attribute is zero which stops SOCS from recording any information into the survey database.
 
-To Scheduler Topics
+To-Scheduler Topics
 ~~~~~~~~~~~~~~~~~~~
 
 The topics that all Schedulers must handle are listed in the following sections.
@@ -90,12 +86,12 @@ SOCS requires that any Scheduler wishing to interface with it must be launchable
 Observatory Model
 -----------------
 
-The current `Scheduler code`_ contains the only sanctioned observatory model for the project. It must be used to calculate all slew times for ranking targets. SOCS provides the configuration for the observatory via a DDS/SAL topic that any Scheduler must recieve, convert and pass that to the instantiation of the observatory model. Examples of use can be found in the `Scheduler code`_ repository. Again, all Schedulers **MUST** use this model even if no other code from the LSST Scheduler is used. It is possible that this code may be refactored into a separate repository for easier use.
+The current `Scheduler code`_ contains the only sanctioned observatory model for the LSST project. It must be used to calculate all slew times for ranking targets. SOCS provides the configuration for the observatory via a DDS/SAL topic that any Scheduler must recieve, convert and pass that to the instantiation of the observatory model. Examples of use can be found in the `Scheduler code`_ repository. Again, all Schedulers **MUST** use this model even if no other code from the LSST Scheduler is used. It is possible that this code may be refactored into a separate repository for easier use.
 
 Sky Brightness Model
 --------------------
 
-SOCS and the Scheduler will be moving to the pre-calculated `Sky Brightness code`_ by the time version 1.0 of the combined system comes out. This is a project sanctioned model for sky brightness. This is the model that SOCS will use to determine the sky brightness at the time of observation. Any Scheduler should make use of this model to ensure commensurate sky brightness behavior between the two systems.
+SOCS and the Scheduler will be moving to the pre-calculated `Sky Brightness code`_ by the time version 1.0 of the combined system comes out. This is a model sanctioned by the LSST project for sky brightness. This is the model that SOCS will use to determine the sky brightness at the time of observation. Any Scheduler should make use of this model to ensure commensurate sky brightness behavior between the two systems.
 
 Optional Requirements
 =====================
@@ -103,24 +99,27 @@ Optional Requirements
 SAL/DDS Communication
 ---------------------
 
-To Scheduler Topics
+To-Scheduler Topics
 ~~~~~~~~~~~~~~~~~~~
 
 Scheduler Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The Scheduler Driver and Scheduler configuration topics are used by the LSST Scheduler. However, other Scheduler's are not required to use them. If configuration of another Scheduler is required, please work with the SOCS author to ensure proper communication of parameters.
+The Scheduler Driver and Scheduler configuration topics are used by the LSST Scheduler. However, other Schedulers are not required to use them. If configuration of another Scheduler is required, please work with the SOCS author to ensure proper communication of parameters.
 
 Clouds
 ^^^^^^
 
-SOCS currently uses the OpSim3 cloud information. A Scheduler may have it's own cloud model and ignore the information coming from SOCS. However, the observation cloud information is taken from the OpSim3 values. If a Scheduler author wishes to have commensurate behavior, please work with the SOCS author to design a suitable mechanism for information gathering.
+SOCS currently uses the OpSim3 cloud information. A Scheduler may have its own cloud model and ignore the information coming from SOCS. However, the observation cloud information is taken from the OpSim3 values. If a Scheduler author wishes to have commensurate behavior, please work with the SOCS author to design a suitable mechanism for information gathering.
 
 Observation
 ^^^^^^^^^^^
 
 While this is an important topic, it is possible that a given Scheduler may not use the information stored within the observation topic to track progress or for other bookkeeping. That Scheduler may have alternate methodologies for handling this information. Therefore, the topic is not required for use, but will be sent regardless.
 
+.. [Reuter2016] Reuter et al, *Simulating the LSST OCS for Conducting Survey Simulations 
+                using the LSST Scheduler* 
+                `SPIE 2016 <http://dx.doi.org/10.1117/12.2232680>`_
 .. _SOCS code: https://github.com/lsst-sims/sims_ocs
 .. _SOCS documentation: https://lsst-sims.github.io/sims_ocs
 .. _Scheduler ICD: https://docushare.lsstcorp.org/docushare/dsweb/Services/Document-18105
