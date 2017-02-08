@@ -21,7 +21,7 @@ There are currently four topics that the LSST Scheduler sends to SOCS, all of wh
 Fields
 ^^^^^^
 
-All information is currently mandatory due to the LSST Scheduler being responsible for the information. However, the new `Sims Survey Fields code`_ is destined to end the need for a Scheduler to send this information as all code bases can benefit from the central resource. For mapping sky brightness and airmass, a unique field identifier is required by SOCS. It does not currently offer HealPix support, however, one can work with the author to determine methodology for commensurate behavior.
+All information is currently mandatory due to the LSST Scheduler being responsible for the information. However, the new `Sims Survey Fields code`_ is destined to end the need for a Scheduler to send this information as all code bases can benefit from the central resource. For mapping sky brightness and airmass, a unique field identifier is required by SOCS. It does not currently offer HealPix support, however, one can work with the author to determine a methodology for commensurate behavior.
 
 Next Target
 ^^^^^^^^^^^
@@ -51,7 +51,7 @@ This topic provides the wall clock for the simulation (timestamp and night) as w
 Observing Site
 ^^^^^^^^^^^^^^
 
-This configuration topic is mandatory since all Schedulers should not have predefined values for this information. SOCS uses a sanctions package to retrieve the information to cut down on errors related to uncontrolled parameter changes.
+This configuration topic is mandatory since all Schedulers should not have predefined values for this information. SOCS uses a sanctioned package to retrieve the information to cut down on errors related to uncontrolled parameter changes.
 
 Observatory Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -81,7 +81,7 @@ Any new Scheduler code base must conform to the EUPS configuration system used b
 Scheduler Executable
 --------------------
 
-SOCS requires that any Scheduler wishing to interface with it must be launchable via a script called ``scheduler.py``. This script should be configured to be in the ``$PATH`` for the Scheduler package. This allows for easy generic execution by SOCS. If a Scheduler is written to use the Python logging system, it must hook into the central logging process launched by SOCS. See the LSST `Scheduler code`_ ``setup.configure_logging`` function for details on how this works. The first three arguments in the ``setup.create_parser`` function shows how SOCS needs to interact with a Scheduler to configure logging. The The SOCS code can be profiled by using a switch passed to the executable. A Scheduler may wish to have profiling run at the same time. If so, it should support the command line argument ``--profile`` for this to occur.
+SOCS requires that any Scheduler wishing to interface with it must be launchable via a script called ``scheduler.py``. This script should be configured to be in the ``$PATH`` for the Scheduler package. This allows for easy generic execution by SOCS. If a Scheduler is written to use the Python logging system, it must hook into the central logging process launched by SOCS. See the LSST `Scheduler code`_ ``setup.configure_logging`` function for details on how this works. The first three arguments in the ``setup.create_parser`` function shows how SOCS needs to interact with a Scheduler to configure logging. The SOCS code can be profiled by using a switch passed to the executable. A Scheduler may wish to have profiling run at the same time. If so, it should support the command line argument ``--profile`` for this to occur.
 
 Observatory Model
 -----------------
